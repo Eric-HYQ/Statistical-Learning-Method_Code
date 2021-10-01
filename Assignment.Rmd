@@ -1,0 +1,89 @@
+---
+title: "Assignment"
+output: word_document
+---
+*** 
+Part I\
+Question 1\
+```{r}
+statitic_age <- 1.43/0.46
+p_value1 <- pnorm(statitic_age,lower.tail = FALSE)*2
+p_value1 < 0.05
+
+statitic_weight <- 25.9/31.0
+p_value2 <- pnorm(statitic_weight,lower.tail = FALSE)*2
+p_value2 < 0.05
+```
+
+We can reject the null hypothesis that the age parameter is not zero because the p-value is smaller than 0.05.\
+We can not reject the null hypothesis that the weight parameter equals to zero because the p-value is larger than 0.05. \
+From the magnitudes of the estimated coefficients, we can infer that the age variable is biologic significant but the weight parameter is not biologic significant.\
+
+Question 2\
+```{r}
+setwd("D:/")
+dataset <- read.csv("3.ex.Funding.csv")
+dataset <- na.omit(dataset)
+model <- lm(dollars ~  incid + preval + hospdays + mort + yrslost + disabil,data = dataset)
+summary(model)
+step(model, direction = "both")
+
+final_model <- lm(dollars ~ hospdays + mort + yrslost, data = dataset)
+summary(final_model)
+```
+
+The final model would be dollars ~ hospdays + mort + yrslost\
+To be more specific, 
+dollars = 76699.48 + 22.47 hospdays - 9203.94 mort + 1472.82 yrslost
+
+Question 6\
+```{r}
+log_dollars <- log(dataset$dollars)
+log_hospdays <- log(dataset$hospdays)
+log_mort <- log(dataset$mort)
+log_yrslost <- log(dataset$yrslost)
+log_disabil <- log(dataset$disabil)
+
+model_log <- lm(log_dollars ~ log_yrslost + log_mort + log_hospdays + log_disabil)
+summary(model_log)
+
+mean(log_dollars)
+residuals(model_log)
+plot(model_log,1)
+plot(model_log,3)
+```
+
+The graph tells that most of the data are in the range of the 95% bounds for the studentized residuals. It tells that the quality of the fit of this model to these data is well. \
+
+
+
+
+***
+Part II\
+Question 1\
+```{r}
+setwd("D:/")
+dataset2 <- read.csv("BME.csv")
+dataset2$group=as.factor(dataset2$group)
+result <- aov(bmd ~ group, data = dataset2)
+summary(result)
+```
+
+The F test statistic is 2.277 and the related p-value is about 0.067. Since the p-value is larger than 0.05, we do not have enough evidence to reject the null hypothesis and hence we believe precent changes in BMD are not statistically different among the five different groups. \
+
+Question 2\
+```{r}
+library("nnet")
+dummygroup <- class.ind(dataset2$group)
+model_dummy <- lm(bmd ~ dummygroup[,1:4],data = dataset2)
+summary(model_dummy)
+
+```
+
+The F test statistic is 2.277 and the related p-value is about 0.067. The null hypothesis is that there is no significant difference in the percent changes in BMD among five different groups. The alternative hypothesis is that there is significant difference in the percent changes in BMD among five different groups.The results are totally same as what we got in the ANOVA method. 
+
+
+
+
+
+
